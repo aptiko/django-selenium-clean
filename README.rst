@@ -12,25 +12,31 @@ Tutorial
 Installation
 ------------
 
-In your virtualenv::
+In your virtualenv:
+
+.. code:: sh
 
    pip install django-selenium-clean
 
 Setting up
 ----------
 
-* Create a new django project and app::
+* Create a new django project and app:
 
-    django-admin startproject foo
-    cd foo
-    python manage.py startapp bar
+  .. code:: sh
+
+     django-admin startproject foo
+     cd foo
+     python manage.py startapp bar
 
 * In ``foo/settings.py``, add ``'bar'`` to ``INSTALLED_APPS``
 
 * In ``foo/urls.py``, add ``from bar.views import SimpleView`` to the
   top, and add ``url(r'^$', SimpleView.as_view())`` to ``urlpatterns``.
 
-* Add the SimpleView to ``bar/views.py``::
+* Add the SimpleView to ``bar/views.py``:
+
+  .. code:: python
 
      import textwrap
 
@@ -81,7 +87,9 @@ should see the simple page. Let's now proceed to write a test for it.
 Writing the test
 ----------------
 
-Modify ``bar/tests.py`` so that it has the following contents::
+Modify ``bar/tests.py`` so that it has the following contents:
+
+.. code:: python
 
    from unittest import skipUnless
 
@@ -121,7 +129,9 @@ Executing the test
 
 Try ``python manage.py test`` and it will skip the test because
 selenium is unconfigured. You need to configure it by specifying
-``SELENIUM_WEBDRIVERS`` in ``foo/settings.py``::
+``SELENIUM_WEBDRIVERS`` in ``foo/settings.py``:
+
+.. code:: python
 
    from selenium import webdriver
    SELENIUM_WEBDRIVERS = {
@@ -140,7 +150,9 @@ Advanced test running tricks
 Executing a test in many widths
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Add this to your ``foo/settings.py``::
+Add this to your ``foo/settings.py``:
+
+.. code:: python
 
    SELENIUM_WIDTHS = [1024, 800, 350]
 
@@ -151,7 +163,9 @@ The default is to run them on only one width, 1024.
 Using many selenium drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can have many ``SELENIUM_WEBDRIVERS``::
+You can have many ``SELENIUM_WEBDRIVERS``:
+
+.. code:: python
 
    from selenium import webdriver
    SELENIUM_WEBDRIVERS = {
@@ -168,7 +182,9 @@ You can have many ``SELENIUM_WEBDRIVERS``::
    }
 
 By default, the ``default`` one is used. You can specify another using
-the ``SELENIUM_WEBDRIVER`` environment variable::
+the ``SELENIUM_WEBDRIVER`` environment variable:
+
+.. code:: sh
 
    SELENIUM_WEBDRIVER=chrome python manage.py test
 
@@ -179,12 +195,16 @@ It can be very useful to run the selenium tests with a headless
 browser, that is, in an invisible browser window. For one thing, it
 is much faster. There are also other use cases. This can be done on
 operating systems supporting ``xvfb``. Install ``xvfb`` and
-``pyvirtualdisplay``; for example::
+``pyvirtualdisplay``; for example:
+
+.. code:: sh
 
    apt-get install xvfb
    pip install pyvirtualdisplay
 
-Add this to your ``settings.py``::
+Add this to your ``settings.py``:
+
+.. code:: python
 
    if os.environ.get('SELENIUM_HEADLESS', None):
        from pyvirtualdisplay import Display
@@ -193,7 +213,9 @@ Add this to your ``settings.py``::
        import atexit
        atexit.register(lambda: display.stop())
 
-Then run the tests like this::
+Then run the tests like this:
+
+.. code:: sh
 
    SELENIUM_HEADLESS=True python manage.py test
 
@@ -203,7 +225,7 @@ Reference
 The selenium object
 -------------------
 
-::
+.. code:: python
 
    from django_selenium_clean import selenium
 
@@ -223,7 +245,9 @@ following additional methods:
 * ``selenium.wait_until_n_windows(n, timeout=2)``
 
   Useful when a Javascript action has caused the browser to open
-  another window. The typical usage is this::
+  another window. The typical usage is this:
+
+  .. code:: python
 
      button_that_will_open_a_second_window.click()
      selenium.wait_until_n_windows(n=2, timeout=10)
@@ -239,7 +263,7 @@ following additional methods:
 SeleniumTestCase objects
 ------------------------
 
-::
+.. code:: python
 
    from django_selenium_clean import SeleniumTestCase
 
@@ -250,7 +274,7 @@ Selenium tests from this class instead of ``LiveServerTestCase``.
 PageElement objects
 -------------------
 
-::
+.. code:: python
 
     from django_selenium_clean import PageElement
 
