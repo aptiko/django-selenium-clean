@@ -19,60 +19,60 @@ In your virtualenv::
 Setting up
 ----------
 
- * Create a new django project and app::
+* Create a new django project and app::
 
-     django-admin startproject foo
-     cd foo
-     python manage.py startapp bar
+    django-admin startproject foo
+    cd foo
+    python manage.py startapp bar
 
- * In ``foo/settings.py``, add ``'bar'`` to ``INSTALLED_APPS``
+* In ``foo/settings.py``, add ``'bar'`` to ``INSTALLED_APPS``
 
- * In ``foo/urls.py``, add ``from bar.views import SimpleView`` to the
-   top, and add ``url(r'^$', SimpleView.as_view())`` to ``urlpatterns``.
+* In ``foo/urls.py``, add ``from bar.views import SimpleView`` to the
+  top, and add ``url(r'^$', SimpleView.as_view())`` to ``urlpatterns``.
 
- * Add the SimpleView to ``bar/views.py``::
+* Add the SimpleView to ``bar/views.py``::
 
-      import textwrap
+     import textwrap
 
-      from django.http import HttpResponse
-      from django.views.generic.base import View
+     from django.http import HttpResponse
+     from django.views.generic.base import View
 
 
-      class SimpleView(View):
+     class SimpleView(View):
 
-          def dispatch(request, *args, **kwargs):
-              response_text = textwrap.dedent('''\
-                    <html>
-                    <head>
-                    <title>Greetings to the world</title>
-                    </head>
-                    <body>
-                    <h1 id="earth">Greetings to earth</h1>
-                    <h1 id="world" style="display: none;">Hello, world!</h1>
+         def dispatch(request, *args, **kwargs):
+             response_text = textwrap.dedent('''\
+                   <html>
+                   <head>
+                   <title>Greetings to the world</title>
+                   </head>
+                   <body>
+                   <h1 id="earth">Greetings to earth</h1>
+                   <h1 id="world" style="display: none;">Hello, world!</h1>
 
-                    <p>We have some javascript here so that when you click the button
-                       the heading above toggles between "Greetings to earth" and
-                       "Hello, world!".</p>
+                   <p>We have some javascript here so that when you click the button
+                      the heading above toggles between "Greetings to earth" and
+                      "Hello, world!".</p>
 
-                    <button onclick="toggle()">Toggle</button>
+                   <button onclick="toggle()">Toggle</button>
 
-                    <script type="text/javascript">
-                       toggle = function () {
-                          var heading_earth = document.getElementById("earth");
-                          var heading_world = document.getElementById("world");
-                          if (heading_earth.style.display == 'none') {
-                                heading_world.style.display = 'none';
-                                heading_earth.style.display = 'block';
-                          } else {
-                                heading_earth.style.display = 'none';
-                                heading_world.style.display = 'block';
-                          }
-                       }
-                    </script>
-                    </body>
-                    </html>
-              ''')
-              return HttpResponse(response_text)
+                   <script type="text/javascript">
+                      toggle = function () {
+                         var heading_earth = document.getElementById("earth");
+                         var heading_world = document.getElementById("world");
+                         if (heading_earth.style.display == 'none') {
+                               heading_world.style.display = 'none';
+                               heading_earth.style.display = 'block';
+                         } else {
+                               heading_earth.style.display = 'none';
+                               heading_world.style.display = 'block';
+                         }
+                      }
+                   </script>
+                   </body>
+                   </html>
+             ''')
+             return HttpResponse(response_text)
 
 We're done setting up. If you now run ``python manage.py runserver``
 in your browser and visit http://localhost:8000/ in your browser, you
@@ -213,26 +213,26 @@ of Django's test client. It has all `selenium driver attributes and
 methods`_, but you will mostly use ``get()``. It also has the
 following additional methods:
 
- * ``selenium.login(**credentials)`, `selenium.logout()``
+* ``selenium.login(**credentials)`, `selenium.logout()``
 
-   Similar to the Django test client ``login()`` and ``logout()``
-   methods.  ``login()`` returns ``True`` if login is possible;
-   ``False`` if the provided credentials are incorrect, or the user is
-   inactive, or if the sessions framework is not available.
+  Similar to the Django test client ``login()`` and ``logout()``
+  methods.  ``login()`` returns ``True`` if login is possible;
+  ``False`` if the provided credentials are incorrect, or the user is
+  inactive, or if the sessions framework is not available.
 
- * ``selenium.wait_until_n_windows(n, timeout=2)``
+* ``selenium.wait_until_n_windows(n, timeout=2)``
 
-    Useful when a Javascript action has caused the browser to open
-    another window. The typical usage is this::
+  Useful when a Javascript action has caused the browser to open
+  another window. The typical usage is this::
 
-       button_that_will_open_a_second_window.click()
-       selenium.wait_until_n_windows(n=2, timeout=10)
-       windows = selenium.window_handles
-       selenium.switch_to_window(windows[1])
-       # continue testing
+     button_that_will_open_a_second_window.click()
+     selenium.wait_until_n_windows(n=2, timeout=10)
+     windows = selenium.window_handles
+     selenium.switch_to_window(windows[1])
+     # continue testing
 
-    If the timeout (in seconds) elapses and the number of browser
-    windows never becomes ``n``, an ``AssertionError`` is raised.
+  If the timeout (in seconds) elapses and the number of browser
+  windows never becomes ``n``, an ``AssertionError`` is raised.
 
 .. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webdriver
 
@@ -259,15 +259,15 @@ properties and methods. It is initialized with a locator_, but the
 element is not actually located until needed. In addition to
 WebElement_ properties and methods, it has these:
 
- * ``PageElement.exists()``: Returns True if the element can be located.
+* ``PageElement.exists()``: Returns True if the element can be located.
 
- * ``PageElement.wait_until_exists(timeout=10)``
+* ``PageElement.wait_until_exists(timeout=10)``
 
-   ``PageElement.wait_until_not_exists(timeout=10)``
+  ``PageElement.wait_until_not_exists(timeout=10)``
 
-   ``PageElement.wait_until_is_displayed(timeout=10)``
+  ``PageElement.wait_until_is_displayed(timeout=10)``
 
-   ``PageElement.wait_until_is_not_displayed(timeout=10)``
+  ``PageElement.wait_until_is_not_displayed(timeout=10)``
 
   These methods raise an exception if there is a timeout.
 
