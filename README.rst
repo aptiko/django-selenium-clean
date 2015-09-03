@@ -1,0 +1,280 @@
+=====================
+django-selenium-clean
+=====================
+
+Write clean Selenium tests on Django. Works on Python 2.7 and 3. Uses
+a paradigm similar to what has confusingly been dubbed "page object
+pattern".
+
+Tutorial
+========
+
+Installation
+------------
+
+In your virtualenv::
+
+   pip install django-selenium-clean
+
+Setting up
+----------
+
+ * Create a new django project and app::
+
+     django-admin startproject foo
+     cd foo
+     python manage.py startapp bar
+
+ * In ``foo/settings.py``, add ``'bar'`` to ``INSTALLED_APPS``
+
+ * In ``foo/urls.py``, add ``from bar.views import SimpleView`` to the
+   top, and add ``url(r'^$', SimpleView.as_view())`` to ``urlpatterns``.
+
+ * Add the SimpleView to ``bar/views.py``::
+
+      import textwrap
+
+      from django.http import HttpResponse
+      from django.views.generic.base import View
+
+
+      class SimpleView(View):
+
+          def dispatch(request, *args, **kwargs):
+              response_text = textwrap.dedent('''\
+                    <html>
+                    <head>
+                    <title>Greetings to the world</title>
+                    </head>
+                    <body>
+                    <h1 id="earth">Greetings to earth</h1>
+                    <h1 id="world" style="display: none;">Hello, world!</h1>
+
+                    <p>We have some javascript here so that when you click the button
+                       the heading above toggles between "Greetings to earth" and
+                       "Hello, world!".</p>
+
+                    <button onclick="toggle()">Toggle</button>
+
+                    <script type="text/javascript">
+                       toggle = function () {
+                          var heading_earth = document.getElementById("earth");
+                          var heading_world = document.getElementById("world");
+                          if (heading_earth.style.display == 'none') {
+                                heading_world.style.display = 'none';
+                                heading_earth.style.display = 'block';
+                          } else {
+                                heading_earth.style.display = 'none';
+                                heading_world.style.display = 'block';
+                          }
+                       }
+                    </script>
+                    </body>
+                    </html>
+              ''')
+              return HttpResponse(response_text)
+
+We're done setting up. If you now run ``python manage.py runserver``
+in your browser and visit http://localhost:8000/ in your browser, you
+should see the simple page. Let's now proceed to write a test for it.
+
+Writing the test
+----------------
+
+Modify ``bar/tests.py`` so that it has the following contents::
+
+   from unittest import skipUnless
+
+   from django_selenium_clean import selenium, SeleniumTestCase, PageElement
+   from selenium.webdriver.common.by import By
+
+
+   @skipUnless(selenium, "Selenium is unconfigured")
+   class HelloTestCase(SeleniumTestCase):
+
+       heading_earth = PageElement(By.ID, 'earth')
+       heading_world = PageElement(By.ID, 'world')
+       button = PageElement(By.CSS_SELECTOR, 'button')
+
+       def test_toggle(self):
+           # Visit the page
+           selenium.get(self.live_server_url)
+
+           # Check that the world heading is visible
+           self.assertTrue(self.heading_earth.is_displayed())
+           self.assertFalse(self.heading_world.is_displayed())
+
+           # Toggle and check the new condition
+           self.button.click()
+           self.heading_world.wait_until_is_displayed()
+           self.assertFalse(self.heading_earth.is_displayed())
+           self.assertTrue(self.heading_world.is_displayed())
+
+           # Toggle again and re-check
+           self.button.click()
+           self.heading_earth.wait_until_is_displayed()
+           self.assertTrue(self.heading_earth.is_displayed())
+           self.assertFalse(self.heading_world.is_displayed())
+
+Executing the test
+------------------
+
+Try ``python manage.py test`` and it will skip the test because
+selenium is unconfigured. You need to configure it by specifying
+``SELENIUM_WEBDRIVERS`` in ``foo/settings.py``::
+
+   from selenium import webdriver
+   SELENIUM_WEBDRIVERS = {
+       'default': {
+           'callable': webdriver.Firefox,
+           'args': (),
+           'kwargs': {},
+       }
+   }
+
+Now try again, and it should execute the test.
+
+Advanced test running tricks
+----------------------------
+
+Executing a test in many widths
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Add this to your ``foo/settings.py``::
+
+   SELENIUM_WIDTHS = [1024, 800, 350]
+
+This will result in executing all ``SeleniumTestCase``'s three times,
+one for each specified browser width. Useful for responsive designs.
+The default is to run them on only one width, 1024.
+
+Using many selenium drivers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can have many ``SELENIUM_WEBDRIVERS``::
+
+   from selenium import webdriver
+   SELENIUM_WEBDRIVERS = {
+       'default': {
+           'callable': webdriver.Firefox,
+           'args': (),
+           'kwargs': {},
+       }
+       'chrome': {
+           'callable': webdriver.Chrome,
+           'args': (),
+           'kwargs': {},
+       }
+   }
+
+By default, the ``default`` one is used. You can specify another using
+the ``SELENIUM_WEBDRIVER`` environment variable::
+
+   SELENIUM_WEBDRIVER=chrome python manage.py test
+
+Running a headless browser
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It can be very useful to run the selenium tests with a headless
+browser, that is, in an invisible browser window. For one thing, it
+is much faster. There are also other use cases. This can be done on
+operating systems supporting ``xvfb``. Install ``xvfb`` and
+``pyvirtualdisplay``; for example::
+
+   apt-get install xvfb
+   pip install pyvirtualdisplay
+
+Add this to your ``settings.py``::
+
+   if os.environ.get('SELENIUM_HEADLESS', None):
+       from pyvirtualdisplay import Display
+       display = Display(visible=0, size=(1024,768))
+       display.start()
+       import atexit
+       atexit.register(lambda: display.stop())
+
+Then run the tests like this::
+
+   SELENIUM_HEADLESS=True python manage.py test
+
+Reference
+=========
+
+The selenium object
+-------------------
+
+::
+
+   from django_selenium_clean import selenium
+
+Technically, ``selenium`` is a wrapper around the selenium driver. In
+practice, you can think about it as the browser, or as the equivalent
+of Django's test client. It has all `selenium driver attributes and
+methods`_, but you will mostly use ``get()``. It also has the
+following additional methods:
+
+ * ``selenium.login(**credentials)`, `selenium.logout()``
+
+   Similar to the Django test client ``login()`` and ``logout()``
+   methods.  ``login()`` returns ``True`` if login is possible;
+   ``False`` if the provided credentials are incorrect, or the user is
+   inactive, or if the sessions framework is not available.
+
+ * ``selenium.wait_until_n_windows(n, timeout=2)``
+
+    Useful when a Javascript action has caused the browser to open
+    another window. The typical usage is this::
+
+       button_that_will_open_a_second_window.click()
+       selenium.wait_until_n_windows(n=2, timeout=10)
+       windows = selenium.window_handles
+       selenium.switch_to_window(windows[1])
+       # continue testing
+
+    If the timeout (in seconds) elapses and the number of browser
+    windows never becomes ``n``, an ``AssertionError`` is raised.
+
+.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webdriver
+
+SeleniumTestCase objects
+------------------------
+
+::
+
+   from django_selenium_clean import SeleniumTestCase
+
+``SeleniumTestCase`` is the same as Django's ``LiveServerTestCase``
+but it adds a little bit of Selenium functionality. Derive your
+Selenium tests from this class instead of ``LiveServerTestCase``.
+
+PageElement objects
+-------------------
+
+::
+
+    from django_selenium_clean import PageElement
+
+``PageElement`` is a lazy wrapper around WebElement_; it has all its
+properties and methods. It is initialized with a locator_, but the
+element is not actually located until needed. In addition to
+WebElement_ properties and methods, it has these:
+
+ * ``PageElement.exists()``: Returns True if the element can be located.
+
+ * ``PageElement.wait_until_exists(timeout=10)``
+
+   ``PageElement.wait_until_not_exists(timeout=10)``
+
+   ``PageElement.wait_until_is_displayed(timeout=10)``
+
+   ``PageElement.wait_until_is_not_displayed(timeout=10)``
+
+  These methods raise an exception if there is a timeout.
+
+.. _WebElement: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webelement
+.. _locator: http://selenium-python.readthedocs.org/en/latest/api.html#locate-elements-by
+
+License
+=======
+
+Licensed under the BSD 3-clause license; see `LICENSE.txt` for details.
