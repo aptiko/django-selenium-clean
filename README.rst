@@ -6,6 +6,8 @@ Write clean Selenium tests on Django. Works on Python 2.7 and 3. Uses
 a paradigm similar to what has confusingly been dubbed "page object
 pattern".
 
+.. contents::
+
 Tutorial
 ========
 
