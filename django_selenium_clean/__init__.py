@@ -162,6 +162,14 @@ class PageElement(object):
         WebDriverWait(selenium, timeout).until_not(
             EC.visibility_of_element_located(self.locator))
 
+    def wait_until_contains(self, text, timeout=10):
+        WebDriverWait(selenium, timeout).until(
+            EC.text_to_be_present_in_element(self.locator, text))
+
+    def wait_until_not_contains(self, text, timeout=10):
+        WebDriverWait(selenium, timeout).until_not(
+            EC.text_to_be_present_in_element(self.locator, text))
+
     def exists(self):
         return len(selenium.find_elements(*self.locator)) > 0
 

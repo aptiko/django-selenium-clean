@@ -296,7 +296,13 @@ WebElement_ properties and methods, it has these:
 
   ``PageElement.wait_until_is_not_displayed(timeout=10)``
 
-  These methods raise an exception if there is a timeout.
+  ``PageElement.wait_until_contains(text, timeout=10)``
+
+  ``PageElement.wait_until_not_contains(text, timeout=10)``
+
+  What these methods do should be self-explanatory from their name. The
+  ones ending in ``contains`` refer to whether the element contains the
+  specified text.  The methods raise an exception if there is a timeout.
 
 .. _WebElement: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webelement
 .. _locator: http://selenium-python.readthedocs.org/en/latest/api.html#locate-elements-by

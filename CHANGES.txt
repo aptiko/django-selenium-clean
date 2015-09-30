@@ -1,6 +1,7 @@
 DEV
 ---
 
+- Added PageElement.wait_until_[not_]contains() methods.
 - SeleniumTestCase now derived from StaticLiveServerTestCase.
 
 0.1.0 (2015-09-03)
