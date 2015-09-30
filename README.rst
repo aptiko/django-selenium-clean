@@ -269,9 +269,10 @@ SeleniumTestCase objects
 
    from django_selenium_clean import SeleniumTestCase
 
-``SeleniumTestCase`` is the same as Django's ``LiveServerTestCase``
-but it adds a little bit of Selenium functionality. Derive your
-Selenium tests from this class instead of ``LiveServerTestCase``.
+``SeleniumTestCase`` is the same as Django's
+``StaticLiveServerTestCase`` but it adds a little bit of Selenium
+functionality. Derive your Selenium tests from this class instead of
+``StaticLiveServerTestCase``.
 
 PageElement objects
 -------------------

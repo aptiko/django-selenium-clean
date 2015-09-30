@@ -7,8 +7,8 @@ import time
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.http import HttpRequest
-from django.test import LiveServerTestCase
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -117,7 +117,7 @@ if selenium:
     atexit.register(lambda: selenium.driver.quit())
 
 
-class SeleniumTestCase(LiveServerTestCase):
+class SeleniumTestCase(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
