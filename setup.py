@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-selenium-clean",
-    version="dev",
+    version="DEV",
     license="GPL3",
     description="Write clean Selenium tests in Django",
     author="Antonis Christofides",
