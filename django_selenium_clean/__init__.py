@@ -57,6 +57,9 @@ class SeleniumWrapper(object):
 
         The code is based on django.test.client.Client.login.
         """
+        # Visit the home page to ensure the cookie gets the proper domain
+        self.get(self.live_server_url)
+
         user = authenticate(**credentials)
         if not (user and user.is_active
                 and 'django.contrib.sessions' in settings.INSTALLED_APPS):
@@ -82,13 +85,6 @@ class SeleniumWrapper(object):
             'expires': None,
         }
         self.add_cookie(cookie_data)
-
-        # If the cookie doesn't have a proper domain, it means selenium hadn't
-        # previously connected to the site; so get the home page and re-add the
-        # cookie.
-        if not self.get_cookie(settings.SESSION_COOKIE_NAME)['domain']:
-            self.get(self.live_server_url)
-            self.add_cookie(cookie_data)
 
         return True
 
