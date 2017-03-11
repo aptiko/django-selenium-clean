@@ -237,7 +237,7 @@ of Django's test client. It has all `selenium driver attributes and
 methods`_, but you will mostly use ``get()``. It also has the
 following additional methods:
 
-* ``selenium.login(**credentials)`, `selenium.logout()``
+* ``selenium.login(**credentials)``, ``selenium.logout()``
 
   Similar to the Django test client ``login()`` and ``logout()``
   methods.  ``login()`` returns ``True`` if login is possible;
