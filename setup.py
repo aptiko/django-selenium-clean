@@ -57,10 +57,10 @@ class CustomTestCommand(test):
 setup(
     name="django-selenium-clean",
     version="DEV",
-    license="GPL3",
+    license="MIT",
     description="Write clean Selenium tests in Django",
     author="Antonis Christofides",
-    author_email="anthony@itia.ntua.gr",
+    author_email="antonis@djangodeployment.com",
     url="https://github.com/aptiko/django-selenium-clean",
     packages=find_packages(),
     install_requires=[

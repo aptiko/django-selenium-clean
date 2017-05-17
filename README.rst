@@ -110,7 +110,7 @@ Modify ``bar/tests.py`` so that it has the following contents:
            # Visit the page
            selenium.get(self.live_server_url)
 
-           # Check that the world heading is visible
+           # Check that the earth heading is visible
            self.assertTrue(self.heading_earth.is_displayed())
            self.assertFalse(self.heading_world.is_displayed())
 
@@ -260,7 +260,7 @@ following additional methods:
   If the timeout (in seconds) elapses and the number of browser
   windows never becomes ``n``, an ``AssertionError`` is raised.
 
-.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webdriver
+.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webdriver
 
 SeleniumTestCase objects
 ------------------------
@@ -294,7 +294,7 @@ WebElement_ properties and methods, it has these:
 
   ``PageElement.wait_until_is_displayed(timeout=10)``
 
-  ``PageElement.wait_until_is_not_displayed(timeout=10)``
+  ``PageElement.wait_until_not_displayed(timeout=10)``
 
   ``PageElement.wait_until_contains(text, timeout=10)``
 
@@ -304,8 +304,8 @@ WebElement_ properties and methods, it has these:
   ones ending in ``contains`` refer to whether the element contains the
   specified text.  The methods raise an exception if there is a timeout.
 
-.. _WebElement: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webelement
-.. _locator: http://selenium-python.readthedocs.org/en/latest/api.html#locate-elements-by
+.. _WebElement: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webelement
+.. _locator: http://selenium-python.readthedocs.org/api.html#locate-elements-by
 
 License
 =======
