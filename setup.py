@@ -64,8 +64,8 @@ setup(
     url="https://github.com/aptiko/django-selenium-clean",
     packages=find_packages(),
     install_requires=[
-        'django>=1.7',
-        'selenium>=2.40',
+        'django>=1.8,<2',
+        'selenium>=2.40,<4',
     ],
     cmdclass={'test': CustomTestCommand},
     test_suite="tests.tests",
