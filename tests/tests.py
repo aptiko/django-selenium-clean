@@ -2,15 +2,7 @@ import os
 
 import django
 from django.core import management
-
-
-os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
-django.setup()
-management.call_command('migrate')
-
-
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -50,6 +42,8 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
         self.assertFalse(self.heading_world.is_displayed())
 
     def test_login(self):
+        from django.contrib.auth.models import User
+
         User.objects.create(username='alice',
                             password=make_password('topsecret'),
                             is_active=True)
@@ -186,3 +180,8 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
             self.message.wait_until_not_contains('world', timeout=1)
         self.assertTrue('world' in self.message.text)
         self.assertFalse('earth' in self.message.text)
+
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
+django.setup()
+management.call_command('migrate')
