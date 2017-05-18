@@ -1,3 +1,14 @@
+import os
+
+import django
+from django.core import management
+
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
+django.setup()
+management.call_command('migrate')
+
+
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
