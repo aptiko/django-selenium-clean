@@ -138,13 +138,14 @@ selenium is unconfigured. You need to configure it by specifying
    from selenium import webdriver
    SELENIUM_WEBDRIVERS = {
        'default': {
-           'callable': webdriver.Firefox,
+           'callable': webdriver.Chrome,
            'args': (),
            'kwargs': {},
        }
    }
 
-Now try again, and it should execute the test.
+Now try again, and it should execute the test. Note that there may be `problems
+with Firefox`_.
 
 Advanced test running tricks
 ----------------------------
@@ -172,12 +173,12 @@ You can have many ``SELENIUM_WEBDRIVERS``:
    from selenium import webdriver
    SELENIUM_WEBDRIVERS = {
        'default': {
-           'callable': webdriver.Firefox,
+           'callable': webdriver.Chrome,
            'args': (),
            'kwargs': {},
        }
-       'chrome': {
-           'callable': webdriver.Chrome,
+       'firefox': {
+           'callable': webdriver.Firefox,
            'args': (),
            'kwargs': {},
        }
@@ -188,7 +189,11 @@ the ``SELENIUM_WEBDRIVER`` environment variable:
 
 .. code:: sh
 
-   SELENIUM_WEBDRIVER=chrome python manage.py test
+   SELENIUM_WEBDRIVER=firefox python manage.py test
+
+Note that there may be `problems with Firefox`_.
+
+.. _problems with firefox: https://github.com/aptiko/django-selenium-clean/issues/2
 
 Running a headless browser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -306,6 +311,17 @@ WebElement_ properties and methods, it has these:
 
 .. _WebElement: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webelement
 .. _locator: http://selenium-python.readthedocs.org/api.html#locate-elements-by
+
+Running django-selenium-clean's own unit tests
+==============================================
+
+By default the unit tests will use Chrome::
+
+    ./setup.py test
+
+Use the ``SELENIUM_BROWSER`` environment variable to use another browser::
+
+    SELENIUM_BROWSER=Firefox ./setup.py test
 
 License
 =======

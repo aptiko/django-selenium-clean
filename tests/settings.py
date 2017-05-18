@@ -42,7 +42,8 @@ TEMPLATES = [{
 
 SELENIUM_WEBDRIVERS = {
     'default': {
-        'callable': webdriver.Firefox,
+        'callable': webdriver.__dict__[os.environ.get('SELENIUM_BROWSER',
+                                                      'Chrome')],
         'args': (),
         'kwargs': {},
     },
