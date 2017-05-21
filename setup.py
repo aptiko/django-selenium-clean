@@ -19,7 +19,7 @@ setup(
         'Topic :: Software Development :: Testing',
     ],
     name="django-selenium-clean",
-    version="0.2.1",
+    version="0.2.2",
     description="Write clean Selenium tests in Django",
     author="Antonis Christofides",
     author_email="antonis@djangodeployment.com",
