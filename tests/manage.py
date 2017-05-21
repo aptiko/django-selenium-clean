@@ -3,7 +3,7 @@ import os
 import sys
 
 # This file is not normally used. The tests.py file has a little bit of magic
-# at the beginning which starts django. The purpose of this file is merely to
+# at the bottom which starts django. The purpose of this file is merely to
 # make it easier to start the testing app manually (e.g. with runserver) in
 # order to debug the testing suite itself.
 
