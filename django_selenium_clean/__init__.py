@@ -58,8 +58,7 @@ class SeleniumWrapper(object):
             setattr(self.driver, name, value)
 
     def __nonzero__(self):
-        self.ensure_init()
-        return bool(self.driver)
+        return bool(self.__dict__['driver'])
 
     def login(self, **credentials):
         """
