@@ -79,8 +79,8 @@ class SeleniumWrapper(object):
         self.get(self.live_server_url)
 
         user = authenticate(**credentials)
-        if not (user and user.is_active
-                and 'django.contrib.sessions' in settings.INSTALLED_APPS):
+        if not (user and user.is_active and
+                'django.contrib.sessions' in settings.INSTALLED_APPS):
             return False
 
         engine = import_module(settings.SESSION_ENGINE)
