@@ -2,6 +2,26 @@
 django-selenium-clean
 =====================
 
+.. image:: https://travis-ci.org/aptiko/django-selenium-clean.svg?branch=master
+    :alt: Build button
+    :target: https://travis-ci.org/aptiko/django-selenium-clean
+
+.. image:: https://codecov.io/github/aptiko/django-selenium-clean/coverage.svg?branch=master
+    :alt: Coverage
+    :target: https://codecov.io/gh/aptiko/django-selenium-clean
+
+.. image:: https://img.shields.io/pypi/l/django-selenium-clean.svg
+    :alt: License
+    :target: #
+
+.. image:: https://img.shields.io/pypi/status/django-selenium-clean.svg
+    :alt: Status
+    :target: #
+
+.. image:: https://img.shields.io/pypi/v/django-selenium-clean.svg
+    :alt: Latest version
+    :target: https://pypi.python.org/pypi/django-selenium-clean
+
 Write clean Selenium tests on Django. Works on Python 2.7 and 3. Uses
 a paradigm similar to what has confusingly been dubbed "page object
 pattern".

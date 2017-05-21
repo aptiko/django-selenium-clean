@@ -4,9 +4,22 @@ from setuptools import setup, find_packages
 
 
 setup(
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Software Development :: Testing',
+    ],
     name="django-selenium-clean",
     version="DEV",
-    license="MIT",
     description="Write clean Selenium tests in Django",
     author="Antonis Christofides",
     author_email="antonis@djangodeployment.com",
