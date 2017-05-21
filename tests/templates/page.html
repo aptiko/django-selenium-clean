@@ -1,0 +1,71 @@
+<title>Greetings to the world</title>
+<h1 id="earth">Greetings to earth</h1>
+<h1 id="world" style="display: none;">Hello, world!</h1>
+
+<p id="message">Greetings to earth</p>
+
+{% if request.user.is_authenticated %}
+  <p id="user">The logged on user is {{ request.user.username }}.</p>
+{% else %}
+<p id="user">No user is logged on.</p>
+{% endif %}
+
+<button id="toggle-heading">This button toggles the heading</button>
+
+<button id="open-window">This button opens another window.</button>
+
+<button id="toggle-element">This button toggles the existence (rather than the
+    visibility) of an element.</button>
+
+<button id="toggle-message">This button toggles the message; it's similar to
+    the heading except that it just changes the text of the element rather than
+    switching the element altogether.</button>
+
+<script type="text/javascript">
+   var toggle_heading = function() {
+        var heading_earth = document.getElementById("earth");
+        var heading_world = document.getElementById("world");
+        if (heading_earth.style.display == 'none') {
+            heading_world.style.display = 'none';
+            heading_earth.style.display = 'block';
+        } else {
+            heading_earth.style.display = 'none';
+            heading_world.style.display = 'block';
+        }
+    };
+
+    var toggle_element = function() {
+        var togglable = document.querySelector('#togglable');
+        if (togglable) {
+            togglable.parentNode.removeChild(togglable);
+        } else {
+            togglable = document.createElement("P");
+            togglable.appendChild(document.createTextNode("Now you see me..."))
+            togglable.id = 'togglable';
+            document.querySelector('body').appendChild(togglable);
+        }
+    };
+
+    var toggle_message = function() {
+        var message = document.querySelector('#message');
+        message.innerHTML = message.innerHTML === 'Greetings to earth' ?
+            'Hello, world!' : 'Greetings to earth';
+    };
+
+    var open_window = function() {
+        window.open('about:blank');
+    };
+
+    var init = function() {
+        document.querySelector('#toggle-heading').addEventListener('click',
+                toggle_heading);
+        document.querySelector('#open-window').addEventListener('click',
+                open_window);
+        document.querySelector('#toggle-element').addEventListener('click',
+                toggle_element);
+        document.querySelector('#toggle-message').addEventListener('click',
+                toggle_message);
+    };
+
+    init();
+</script>

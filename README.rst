@@ -2,6 +2,26 @@
 django-selenium-clean
 =====================
 
+.. image:: https://travis-ci.org/aptiko/django-selenium-clean.svg?branch=master
+    :alt: Build button
+    :target: https://travis-ci.org/aptiko/django-selenium-clean
+
+.. image:: https://codecov.io/github/aptiko/django-selenium-clean/coverage.svg?branch=master
+    :alt: Coverage
+    :target: https://codecov.io/gh/aptiko/django-selenium-clean
+
+.. image:: https://img.shields.io/pypi/l/django-selenium-clean.svg
+    :alt: License
+    :target: #
+
+.. image:: https://img.shields.io/pypi/status/django-selenium-clean.svg
+    :alt: Status
+    :target: #
+
+.. image:: https://img.shields.io/pypi/v/django-selenium-clean.svg
+    :alt: Latest version
+    :target: https://pypi.python.org/pypi/django-selenium-clean
+
 Write clean Selenium tests on Django. Works on Python 2.7 and 3. Uses
 a paradigm similar to what has confusingly been dubbed "page object
 pattern".
@@ -110,7 +130,7 @@ Modify ``bar/tests.py`` so that it has the following contents:
            # Visit the page
            selenium.get(self.live_server_url)
 
-           # Check that the world heading is visible
+           # Check that the earth heading is visible
            self.assertTrue(self.heading_earth.is_displayed())
            self.assertFalse(self.heading_world.is_displayed())
 
@@ -138,13 +158,14 @@ selenium is unconfigured. You need to configure it by specifying
    from selenium import webdriver
    SELENIUM_WEBDRIVERS = {
        'default': {
-           'callable': webdriver.Firefox,
+           'callable': webdriver.Chrome,
            'args': (),
            'kwargs': {},
        }
    }
 
-Now try again, and it should execute the test.
+Now try again, and it should execute the test. Note that there may be `problems
+with Firefox`_.
 
 Advanced test running tricks
 ----------------------------
@@ -172,12 +193,12 @@ You can have many ``SELENIUM_WEBDRIVERS``:
    from selenium import webdriver
    SELENIUM_WEBDRIVERS = {
        'default': {
-           'callable': webdriver.Firefox,
+           'callable': webdriver.Chrome,
            'args': (),
            'kwargs': {},
        }
-       'chrome': {
-           'callable': webdriver.Chrome,
+       'firefox': {
+           'callable': webdriver.Firefox,
            'args': (),
            'kwargs': {},
        }
@@ -188,7 +209,11 @@ the ``SELENIUM_WEBDRIVER`` environment variable:
 
 .. code:: sh
 
-   SELENIUM_WEBDRIVER=chrome python manage.py test
+   SELENIUM_WEBDRIVER=firefox python manage.py test
+
+Note that there may be `problems with Firefox`_.
+
+.. _problems with firefox: https://github.com/aptiko/django-selenium-clean/issues/2
 
 Running a headless browser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -237,7 +262,7 @@ of Django's test client. It has all `selenium driver attributes and
 methods`_, but you will mostly use ``get()``. It also has the
 following additional methods:
 
-* ``selenium.login(**credentials)`, `selenium.logout()``
+* ``selenium.login(**credentials)``, ``selenium.logout()``
 
   Similar to the Django test client ``login()`` and ``logout()``
   methods.  ``login()`` returns ``True`` if login is possible;
@@ -260,7 +285,7 @@ following additional methods:
   If the timeout (in seconds) elapses and the number of browser
   windows never becomes ``n``, an ``AssertionError`` is raised.
 
-.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webdriver
+.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webdriver
 
 SeleniumTestCase objects
 ------------------------
@@ -294,7 +319,7 @@ WebElement_ properties and methods, it has these:
 
   ``PageElement.wait_until_is_displayed(timeout=10)``
 
-  ``PageElement.wait_until_is_not_displayed(timeout=10)``
+  ``PageElement.wait_until_not_displayed(timeout=10)``
 
   ``PageElement.wait_until_contains(text, timeout=10)``
 
@@ -304,8 +329,19 @@ WebElement_ properties and methods, it has these:
   ones ending in ``contains`` refer to whether the element contains the
   specified text.  The methods raise an exception if there is a timeout.
 
-.. _WebElement: http://selenium-python.readthedocs.org/en/latest/api.html#module-selenium.webdriver.remote.webelement
-.. _locator: http://selenium-python.readthedocs.org/en/latest/api.html#locate-elements-by
+.. _WebElement: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webelement
+.. _locator: http://selenium-python.readthedocs.org/api.html#locate-elements-by
+
+Running django-selenium-clean's own unit tests
+==============================================
+
+By default the unit tests will use Chrome::
+
+    ./setup.py test
+
+Use the ``SELENIUM_BROWSER`` environment variable to use another browser::
+
+    SELENIUM_BROWSER=Firefox ./setup.py test
 
 License
 =======

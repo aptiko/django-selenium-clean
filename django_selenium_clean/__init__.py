@@ -6,7 +6,6 @@ import os
 import time
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.http import HttpRequest
 
@@ -24,7 +23,19 @@ class SeleniumWrapper(object):
         return cls._instance
 
     def __init__(self):
-        self.driver = False
+        self.__dict__['driver'] = False
+
+    def ensure_init(self):
+        """Perform deferred initialization
+        We can't run the following code in __init__() because then it will
+        run at import time (because the SeleniumWrapper object is immediately
+        instantiated in the selenium global variable). We don't want to run
+        it at import time because Django might not yet be fully setup (meaning
+        settings might not yet be available.
+        """
+        if self.__dict__['driver']:
+            # We are already initialized, nothing to do
+            return
         SELENIUM_WEBDRIVERS = getattr(settings, 'SELENIUM_WEBDRIVERS', {})
         if not SELENIUM_WEBDRIVERS:
             return
@@ -33,19 +44,21 @@ class SeleniumWrapper(object):
         callable = driver['callable']
         args = driver['args']
         kwargs = driver['kwargs']
-        self.driver = callable(*args, **kwargs)
+        self.__dict__['driver'] = callable(*args, **kwargs)
 
     def __getattr__(self, name):
+        self.ensure_init()
         return getattr(self.driver, name)
 
     def __setattr__(self, name, value):
+        self.ensure_init()
         if name == 'driver':
             self.__dict__[name] = value
         else:
             setattr(self.driver, name, value)
 
     def __nonzero__(self):
-        return bool(self.driver)
+        return bool(self.__dict__['driver'])
 
     def login(self, **credentials):
         """
@@ -57,12 +70,16 @@ class SeleniumWrapper(object):
 
         The code is based on django.test.client.Client.login.
         """
+        from django.contrib.auth import authenticate, login
+
+        self.ensure_init()
+
         # Visit the home page to ensure the cookie gets the proper domain
         self.get(self.live_server_url)
 
         user = authenticate(**credentials)
-        if not (user and user.is_active
-                and 'django.contrib.sessions' in settings.INSTALLED_APPS):
+        if not (user and user.is_active and
+                'django.contrib.sessions' in settings.INSTALLED_APPS):
             return False
 
         engine = import_module(settings.SESSION_ENGINE)
@@ -94,6 +111,7 @@ class SeleniumWrapper(object):
 
         Causes the authenticated user to be logged out.
         """
+        self.ensure_init()
         session = import_module(settings.SESSION_ENGINE).SessionStore()
         session_cookie = self.get_cookie(settings.SESSION_COOKIE_NAME)
         if session_cookie:
@@ -101,6 +119,7 @@ class SeleniumWrapper(object):
             self.delete_cookie(settings.SESSION_COOKIE_NAME)
 
     def wait_until_n_windows(self, n, timeout=2):
+        self.ensure_init()
         for i in range(timeout * 10):
             if len(self.window_handles) == n:
                 return
