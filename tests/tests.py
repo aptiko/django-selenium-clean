@@ -2,7 +2,6 @@ import os
 
 import django
 from django.core import management
-from django.contrib.auth.hashers import make_password
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -42,6 +41,7 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
         self.assertFalse(self.heading_world.is_displayed())
 
     def test_login(self):
+        from django.contrib.auth.hashers import make_password
         from django.contrib.auth.models import User
 
         User.objects.create(username='alice',

@@ -6,7 +6,6 @@ import os
 import time
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.http import HttpRequest
 
@@ -72,6 +71,8 @@ class SeleniumWrapper(object):
 
         The code is based on django.test.client.Client.login.
         """
+        from django.contrib.auth import authenticate, login
+
         self.ensure_init()
 
         # Visit the home page to ensure the cookie gets the proper domain
