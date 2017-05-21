@@ -1,4 +1,5 @@
 import os
+from unittest import SkipTest
 
 import django
 from django.core import management
@@ -43,6 +44,11 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
     def test_login(self):
         from django.contrib.auth.hashers import make_password
         from django.contrib.auth.models import User
+
+        browser_name = selenium.capabilities['browserName']
+        browser_version = selenium.capabilities['version']
+        if browser_name == 'phantomjs' and browser_version == '2.1.1':
+            raise SkipTest("https://github.com/ariya/phantomjs/issues/14228")
 
         User.objects.create(username='alice',
                             password=make_password('topsecret'),
