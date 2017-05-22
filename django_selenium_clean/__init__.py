@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import atexit
 from importlib import import_module
 import os
+import signal
 import time
 
 from django.conf import settings
@@ -128,8 +129,20 @@ class SeleniumWrapper(object):
 
 
 selenium = SeleniumWrapper()
-if selenium:
-    atexit.register(lambda: selenium.driver.quit())
+
+
+def quit():
+    if selenium.__dict__['driver']:
+        # The way to exit the browser is selenium.driver.quit(), however we
+        # exit PhantomJS differently because of
+        # https://github.com/SeleniumHQ/selenium/issues/767
+        if selenium.driver.capabilities['browserName'] == 'phantomjs':
+            selenium.driver.service.process.send_signal(signal.SIGTERM)
+        else:
+            selenium.driver.quit()
+
+
+atexit.register(quit)
 
 
 class SeleniumTestCase(StaticLiveServerTestCase):

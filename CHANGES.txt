@@ -1,3 +1,9 @@
+0.2.4 (2017-05-22)
+------------------
+
+- Termination is now more robust.
+- Workaround a ghostdriver bug that prevents PhantomJS from terminating.
+
 0.2.3 (2017-05-22)
 ------------------
 
