@@ -1,4 +1,4 @@
-0.3 (2017-05-23)
+0.3.0 (2017-05-23)
 ----------------
 
 - The logic has changed. Selenium is started at the beginning of the
