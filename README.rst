@@ -115,11 +115,14 @@ Modify ``bar/tests.py`` so that it has the following contents:
 
    from unittest import skipUnless
 
+   from django.conf import settings
+
    from django_selenium_clean import selenium, SeleniumTestCase, PageElement
    from selenium.webdriver.common.by import By
 
 
-   @skipUnless(selenium, "Selenium is unconfigured")
+   @skipUnless(getattr(settings, 'SELENIUM_WEBDRIVERS', False),
+               "Selenium is unconfigured")
    class HelloTestCase(SeleniumTestCase):
 
        heading_earth = PageElement(By.ID, 'earth')
@@ -128,7 +131,7 @@ Modify ``bar/tests.py`` so that it has the following contents:
 
        def test_toggle(self):
            # Visit the page
-           selenium.get(self.live_server_url)
+           self.selenium.get(self.live_server_url)
 
            # Check that the earth heading is visible
            self.assertTrue(self.heading_earth.is_displayed())
@@ -220,9 +223,14 @@ Running a headless browser
 
 It can be very useful to run the selenium tests with a headless
 browser, that is, in an invisible browser window. For one thing, it
-is much faster. There are also other use cases. This can be done on
-operating systems supporting ``xvfb``. Install ``xvfb`` and
-``pyvirtualdisplay``; for example:
+is much faster. There are also other use cases.
+
+The simplest way is to use PhantomJS, a headless browser. To do this,
+just use ``webdriver.PhantomJS`` (you also obviously need to install
+PhantomJS).
+
+An alternative is to use ``xvfb`` for operating systems that support it.
+Install ``xvfb`` and ``pyvirtualdisplay``; for example:
 
 .. code:: sh
 
@@ -235,7 +243,7 @@ Add this to your ``settings.py``:
 
    if os.environ.get('SELENIUM_HEADLESS', None):
        from pyvirtualdisplay import Display
-       display = Display(visible=0, size=(1024,768))
+       display = Display(visible=0, size=(1024, 768))
        display.start()
        import atexit
        atexit.register(lambda: display.stop())
@@ -249,44 +257,6 @@ Then run the tests like this:
 Reference
 =========
 
-The selenium object
--------------------
-
-.. code:: python
-
-   from django_selenium_clean import selenium
-
-Technically, ``selenium`` is a wrapper around the selenium driver. In
-practice, you can think about it as the browser, or as the equivalent
-of Django's test client. It has all `selenium driver attributes and
-methods`_, but you will mostly use ``get()``. It also has the
-following additional methods:
-
-* ``selenium.login(**credentials)``, ``selenium.logout()``
-
-  Similar to the Django test client ``login()`` and ``logout()``
-  methods.  ``login()`` returns ``True`` if login is possible;
-  ``False`` if the provided credentials are incorrect, or the user is
-  inactive, or if the sessions framework is not available.
-
-* ``selenium.wait_until_n_windows(n, timeout=2)``
-
-  Useful when a Javascript action has caused the browser to open
-  another window. The typical usage is this:
-
-  .. code:: python
-
-     button_that_will_open_a_second_window.click()
-     selenium.wait_until_n_windows(n=2, timeout=10)
-     windows = selenium.window_handles
-     selenium.switch_to_window(windows[1])
-     # continue testing
-
-  If the timeout (in seconds) elapses and the number of browser
-  windows never becomes ``n``, an ``AssertionError`` is raised.
-
-.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webdriver
-
 SeleniumTestCase objects
 ------------------------
 
@@ -298,6 +268,38 @@ SeleniumTestCase objects
 ``StaticLiveServerTestCase`` but it adds a little bit of Selenium
 functionality. Derive your Selenium tests from this class instead of
 ``StaticLiveServerTestCase``.
+
+The most important feature of ``SeleniumTestCase`` is the ``selenium``
+attribute.  Technically it is a wrapper around the selenium driver. In
+practice, you can think about it as the browser, or as the equivalent
+of Django's test client. It has all `selenium driver attributes and
+methods`_, but you will mostly use ``get()``. It also has the
+following additional methods:
+
+* ``self.selenium.login(**credentials)``, ``self.selenium.logout()``
+
+  Similar to the Django test client ``login()`` and ``logout()``
+  methods.  ``login()`` returns ``True`` if login is possible;
+  ``False`` if the provided credentials are incorrect, or the user is
+  inactive, or if the sessions framework is not available.
+
+* ``self.selenium.wait_until_n_windows(n, timeout=2)``
+
+  Useful when a Javascript action has caused the browser to open
+  another window. The typical usage is this:
+
+  .. code:: python
+
+     button_that_will_open_a_second_window.click()
+     self.selenium.wait_until_n_windows(n=2, timeout=10)
+     windows = self.selenium.window_handles
+     self.selenium.switch_to_window(windows[1])
+     # continue testing
+
+  If the timeout (in seconds) elapses and the number of browser
+  windows never becomes ``n``, an ``AssertionError`` is raised.
+
+.. _selenium driver attributes and methods: http://selenium-python.readthedocs.org/api.html#module-selenium.webdriver.remote.webdriver
 
 PageElement objects
 -------------------
