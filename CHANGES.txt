@@ -1,5 +1,10 @@
+0.3.1 (2019-05-12)
+------------------
+
+- Updated to current Python and Django versions.
+
 0.3.0 (2017-05-23)
-----------------
+------------------
 
 - The logic has changed. Selenium is started at the beginning of the
   SeleniumTestCase and is closed at the end. This means that the browser
