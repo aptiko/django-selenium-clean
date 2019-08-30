@@ -83,7 +83,7 @@ class SeleniumWrapper(object):
             'value': request.session.session_key,
             'max-age': None,
             'path': '/',
-            'secure': settings.SESSION_COOKIE_SECURE or None,
+            'secure': settings.SESSION_COOKIE_SECURE or False,
             'expires': None,
         }
         self.add_cookie(cookie_data)

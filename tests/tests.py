@@ -46,9 +46,8 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
         from django.contrib.auth.hashers import make_password
         from django.contrib.auth.models import User
 
-        browser_name = self.selenium.capabilities['browserName']
-        browser_version = self.selenium.capabilities['version']
-        if browser_name == 'phantomjs' and browser_version == '2.1.1':
+        cap = self.selenium.capabilities
+        if cap["browserName"] == 'phantomjs' and cap["version"] == '2.1.1':
             raise SkipTest("https://github.com/ariya/phantomjs/issues/14228")
 
         User.objects.create(username='alice',
