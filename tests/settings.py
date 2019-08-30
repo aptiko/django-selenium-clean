@@ -1,5 +1,6 @@
 import os
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 DEBUG = False
 
@@ -40,11 +41,17 @@ TEMPLATES = [{
     },
 }]
 
+headless = ChromeOptions()
+headless.add_argument("--headless")
+
 SELENIUM_WEBDRIVERS = {
     'default': {
         'callable': webdriver.__dict__[os.environ.get('SELENIUM_BROWSER',
                                                       'Chrome')],
-        'args': (),
+        'args': [],
         'kwargs': {},
+    },
+    "headless": {
+        "callable": webdriver.Chrome, "args": [], "kwargs": {"options": headless}
     },
 }
