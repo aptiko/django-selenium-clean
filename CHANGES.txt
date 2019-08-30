@@ -1,3 +1,9 @@
+0.3.2 (2019-08-30)
+------------------
+
+- Fixed SeleniumTestCase.selenium.login(), which wasn't working in
+  current Python/Django/Chrome versions.
+
 0.3.1 (2019-05-12)
 ------------------
 

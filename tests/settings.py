@@ -1,4 +1,6 @@
 import os
+from tempfile import NamedTemporaryFile
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 
@@ -10,7 +12,7 @@ SECRET_KEY = 'topsecret'
 
 ALLOWED_HOSTS = ['*']
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -20,7 +22,7 @@ MIDDLEWARE_CLASSES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
+        'NAME': NamedTemporaryFile().name,
     },
 }
 
