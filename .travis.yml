@@ -7,16 +7,22 @@ python:
  - "3.5"
  - "3.6"
 
+addons:
+  chrome: stable
+
 install:
  - pip install -q "Django$DJANGO_VERSION"
  - pip install codecov
+ - wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+ - wget https://chromedriver.storage.googleapis.com/`cat LATEST_RELEASE`/chromedriver_linux64.zip
+ - sudo unzip chromedriver_linux64.zip -d /usr/local/bin
 
 script:
  - coverage run --include="./*" --omit="./tests/*" setup.py test
 
 env:
  global:
-   - SELENIUM_BROWSER=PhantomJS
+   - SELENIUM_WEBDRIVER=headless
  matrix:
    - DJANGO_VERSION=">=1.11,<2"
    - DJANGO_VERSION=">=2.2,<3"
