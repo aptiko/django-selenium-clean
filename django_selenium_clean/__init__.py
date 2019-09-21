@@ -55,25 +55,54 @@ class SeleniumWrapper(object):
 
         The code is based on django.test.client.Client.login.
         """
-        from django.contrib.auth import authenticate, login
-
-        # Visit the home page to ensure the cookie gets the proper domain
-        self.get(self.live_server_url)
+        from django.contrib.auth import authenticate
 
         user = authenticate(**credentials)
-        if not (
+        if (
             user
             and user.is_active
             and "django.contrib.sessions" in settings.INSTALLED_APPS
         ):
+            self._login(user)
+            return True
+        else:
             return False
+
+    def force_login(self, user, backend=None):
+        """
+        Sets selenium to appear as if a user has successfully signed in.
+
+        The user will have its backend attribute set to the value of the
+        backend argument (which should be a dotted Python path string),
+        or to settings.AUTHENTICATION_BACKENDS[0] if a value isn't
+        provided. The authenticate() function called by login() normally
+        annotates the user like this.
+
+        The code is based on django.test.client.Client.force_login.
+        """
+
+        def get_backend():
+            from django.contrib.auth import load_backend
+
+            for backend_path in settings.AUTHENTICATION_BACKENDS:
+                backend = load_backend(backend_path)
+                if hasattr(backend, "get_user"):
+                    return backend_path
+
+        if backend is None:
+            backend = get_backend()
+        user.backend = backend
+        self._login(user, backend)
+
+    def _login(self, user, backend=None):
+        from django.contrib.auth import login
 
         engine = import_module(settings.SESSION_ENGINE)
 
         # Create a fake request to store login details.
         request = HttpRequest()
         request.session = engine.SessionStore()
-        login(request, user)
+        login(request, user, backend)
 
         # Save the session values.
         request.session.save()
