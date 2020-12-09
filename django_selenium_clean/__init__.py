@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.http import HttpRequest
 
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -149,7 +150,16 @@ class SeleniumTestCase(StaticLiveServerTestCase):
     def __call__(self, result=None):
         if hasattr(self, "selenium"):
             for width in getattr(settings, "SELENIUM_WIDTHS", [1024]):
-                self.selenium.set_window_size(width, 1024)
+                i = 0
+                while True:
+                    try:
+                        self.selenium.set_window_size(width, 1024)
+                        break
+                    except WebDriverException:
+                        if i >= 10:
+                            raise
+                        i += 1
+                        time.sleep(0.5)
         return super(SeleniumTestCase, self).__call__(result)
 
 
