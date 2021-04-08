@@ -1,5 +1,5 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
-urlpatterns = [url(r"^$", views.simple_view)]
+urlpatterns = [path("", views.simple_view)]

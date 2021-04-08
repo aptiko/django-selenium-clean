@@ -1,3 +1,8 @@
+0.3.3 (2021-04-08)
+------------------
+
+- Updated dependencies so that it is compatible with Django 3.
+
 0.3.2 (2019-08-30)
 ------------------
 

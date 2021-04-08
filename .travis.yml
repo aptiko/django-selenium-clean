@@ -3,9 +3,10 @@ dist: xenial
 language: python
 
 python:
- - "2.7"
- - "3.5"
  - "3.6"
+ - "3.7"
+ - "3.8"
+ - "3.9"
 
 addons:
   chrome: stable
@@ -28,14 +29,8 @@ env:
  global:
    - SELENIUM_WEBDRIVER=headless
  matrix:
-   - DJANGO_VERSION=">=1.11,<2"
    - DJANGO_VERSION=">=2.2,<3"
+   - DJANGO_VERSION=">=3.2,<4"
 
 after_success:
  - codecov
-
-matrix:
- exclude:
- # Django 2.2 doesn't run on Python 2.7
- - python: "2.7"
-   env: DJANGO_VERSION=">=2.2,<3"
