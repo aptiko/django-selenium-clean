@@ -17,7 +17,7 @@ setup(
         "Topic :: Software Development :: Testing",
     ],
     name="django-selenium-clean",
-    version="DEV",
+    version="0.0.1.dev0",
     license="BSD 3-Clause License",
     description="Write clean Selenium tests in Django",
     author="Antonis Christofides",
