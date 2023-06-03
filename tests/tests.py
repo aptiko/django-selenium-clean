@@ -88,9 +88,9 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
         self.selenium.wait_until_n_windows(n=2, timeout=1)
 
         # Close the window
-        self.selenium.switch_to_window(self.selenium.window_handles[1])
+        self.selenium.switch_to.window(self.selenium.window_handles[1])
         self.selenium.close()
-        self.selenium.switch_to_window(self.selenium.window_handles[0])
+        self.selenium.switch_to.window(self.selenium.window_handles[0])
 
     def test_exists(self):
         self.selenium.get(self.live_server_url)

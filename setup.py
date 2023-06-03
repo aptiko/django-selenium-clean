@@ -24,6 +24,6 @@ setup(
     author_email="antonis@djangodeployment.com",
     url="https://github.com/aptiko/django-selenium-clean",
     packages=find_packages(),
-    install_requires=["django>=2.2,<4", "selenium>=2.40,<4"],
+    install_requires=["django>=2.2,<4", "selenium>=3,<5"],
     test_suite="tests.tests",
 )
