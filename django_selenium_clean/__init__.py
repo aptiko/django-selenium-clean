@@ -15,10 +15,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class SeleniumWrapper(object):
-    _instance = None
-
     def __new__(cls, *args, **kwargs):
-        if not cls._instance:
+        if not hasattr(cls, "_instance"):
             cls._instance = super(SeleniumWrapper, cls).__new__(cls, *args, **kwargs)
         return cls._instance
 
