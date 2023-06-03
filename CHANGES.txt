@@ -1,3 +1,9 @@
+0.3.4 (2023-06-03)
+------------------
+
+- Fixed an initialization problem that occurred sometimes in recent
+  Python versions.
+
 0.3.3 (2021-04-08)
 ------------------
 
