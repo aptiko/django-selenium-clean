@@ -50,7 +50,7 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
         if cap["browserName"] == "phantomjs" and cap["version"] == "2.1.1":
             raise SkipTest("https://github.com/ariya/phantomjs/issues/14228")
 
-        User.objects.create(
+        alice = User.objects.create(
             username="alice", password=make_password("topsecret"), is_active=True
         )
 
@@ -62,6 +62,23 @@ class DjangoSeleniumCleanTestCase(SeleniumTestCase):
         # Log on
         r = self.selenium.login(username="alice", password="topsecret")
         self.assertTrue(r)
+
+        # Verify we are logged on
+        self.selenium.get(self.live_server_url)
+        self.user_info.wait_until_is_displayed()
+        self.assertEqual(self.user_info.text, "The logged on user is alice.")
+
+        # Log out
+        self.selenium.logout()
+
+        # Verify we are logged out
+        self.selenium.get(self.live_server_url)
+        self.user_info.wait_until_is_displayed()
+        self.assertEqual(self.user_info.text, "No user is logged on.")
+
+        # Log on
+        r = self.selenium.force_login(alice)
+        self.assertIsNone(r)
 
         # Verify we are logged on
         self.selenium.get(self.live_server_url)
